@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction, Router } from 'express'
+
 import * as UserService from './users.service'
-import { BaseUser, User } from './user.interface'
+import { User } from './entities/User'
 
 export const usersRoutes = Router()
 
@@ -14,7 +15,7 @@ usersRoutes.get('/', async (req: Request, res: Response, next: NextFunction) => 
 })
 
 usersRoutes.get('/:id', async (req: Request, res: Response) => {
-  const id: number = parseInt(req.params.id, 10)
+  const id: string = req.params.id
 
   try {
     const user: User = await UserService.find(id)
@@ -23,25 +24,25 @@ usersRoutes.get('/:id', async (req: Request, res: Response) => {
       return res.status(200).send(user)
     }
     res.status(404).send('User not found')
-  } catch (e) {
+  } catch (e: any) {
     res.status(500).send(e.message)
   }
 })
 
 usersRoutes.post('/', async (req: Request, res: Response) => {
   try {
-    const user: BaseUser = req.body
+    const user: User = req.body
 
     const newUser = await UserService.create(user)
 
     res.status(201).json(newUser)
-  } catch (e) {
+  } catch (e: any) {
     res.status(500).send(e.message)
   }
 })
 
 usersRoutes.put('/:id', async (req: Request, res: Response) => {
-  const id: number = parseInt(req.params.id, 10)
+  const id: string = req.params.id
 
   try {
     const userUpdate: User = req.body
@@ -49,25 +50,25 @@ usersRoutes.put('/:id', async (req: Request, res: Response) => {
     const existingUser: User = await UserService.find(id)
 
     if (existingUser) {
-      const updatedUser = await UserService.update(id, userUpdate)
+      const updatedUser = await UserService.update(userUpdate, id)
       return res.status(200).json(updatedUser)
     }
 
     const newUser = await UserService.create(userUpdate)
 
     res.status(201).json(newUser)
-  } catch (e) {
+  } catch (e: any) {
     res.status(500).send(e.message)
   }
 })
 
 usersRoutes.delete('/:id', async (req: Request, res: Response) => {
   try {
-    const id: number = parseInt(req.params.id, 10)
+    const id: string = req.params.id
     await UserService.remove(id)
 
     res.sendStatus(204)
-  } catch (e) {
+  } catch (e: any) {
     res.status(500).send(e.message)
   }
 })

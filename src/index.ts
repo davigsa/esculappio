@@ -1,13 +1,12 @@
-import * as dotenv from 'dotenv'
+import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
 import helmet from 'helmet'
 
-import { usersRoutes } from './users/user.routes'
+import './database'
+import { usersRoutes } from './modules/users/user.routes'
 import { errorHandler } from './middleware/error.middleware'
 import { notFoundHandler } from './middleware/not-found.middleware'
-
-dotenv.config()
 
 if (!process.env.PORT) {
   process.exit(1)
