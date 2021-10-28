@@ -4,7 +4,7 @@ import cors from 'cors'
 import helmet from 'helmet'
 
 import './database'
-import { usersRoutes } from './modules/users/user.routes'
+import { usersRoutes } from './routes/users.routes'
 import { errorHandler } from './middleware/error.middleware'
 import { notFoundHandler } from './middleware/not-found.middleware'
 
