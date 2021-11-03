@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction, Router } from 'express'
 
 import { UsersRespository } from '../modules/users/repositories/UsersRepository'
+import { CreateUserService } from '../modules/users/services/CreateUserService'
 
 export const usersRoutes = Router()
 const usersRespository = new UsersRespository()
@@ -31,7 +32,9 @@ usersRoutes.post('/', async (req: Request, res: Response) => {
   const { name, email, cpf } = req.body
 
   try {
-    await usersRespository.create({ name, email, cpf })
+    const createUserService = new CreateUserService(usersRespository)
+
+    await createUserService.execute({ name, email, cpf })
 
     return res.status(201).send()
   } catch (e: any) {

@@ -2,10 +2,6 @@ import { getRepository } from 'typeorm'
 
 import { User } from '../entities/User'
 
-interface IFindUserDTO {
-  id: string;
-}
-
 interface ICreateUserDTO {
   name: string;
   email: string;
@@ -33,7 +29,7 @@ class UsersRespository {
     return await this.connectUserRepository().find()
   }
 
-  async findById ({ id }: IFindUserDTO): Promise<User> {
+  async findById (id: string): Promise<User> {
     const userById = await this.connectUserRepository().findOne(id)
 
     if (!userById) throw new Error('User not found')
@@ -41,7 +37,19 @@ class UsersRespository {
     return userById
   }
 
-  async updateById ({ id }: IFindUserDTO, { name, email, cpf }: ICreateUserDTO): Promise<void> {
+  async findByEmail (email: string): Promise<User | undefined> {
+    const userByEmail = await this.connectUserRepository().findOne({ email: email })
+
+    return userByEmail
+  }
+
+  async findByCpf (cpf: string): Promise<User | undefined> {
+    const userByCpf = await this.connectUserRepository().findOne({ cpf: cpf })
+
+    return userByCpf
+  }
+
+  async updateById (id: string, { name, email, cpf }: ICreateUserDTO): Promise<void> {
     const userById = await this.connectUserRepository().findOne(id)
 
     if (!userById) throw new Error('Could not update this user')
@@ -55,7 +63,7 @@ class UsersRespository {
     await this.connectUserRepository().save(userById)
   }
 
-  async deleteById ({ id }: IFindUserDTO): Promise<void> {
+  async deleteById (id: string): Promise<void> {
     const userById = await this.connectUserRepository().findOne(id)
 
     if (!userById) throw new Error('User not found')
