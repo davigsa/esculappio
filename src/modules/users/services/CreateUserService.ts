@@ -1,4 +1,4 @@
-import { UsersRespository } from '../repositories/UsersRepository'
+import { IUsersRepository } from '../repositories/IUsersRepository'
 
 interface IRequest {
   name: string;
@@ -7,18 +7,18 @@ interface IRequest {
 }
 
 class CreateUserService {
-  private usersRepository: UsersRespository
+  private usersRepository: IUsersRepository
 
-  constructor (usersRepository: UsersRespository) {
+  constructor (usersRepository: IUsersRepository) {
     this.usersRepository = usersRepository
   }
 
   async execute ({ name, email, cpf }: IRequest): Promise<void> {
     const findUserByEmail = await this.usersRepository.findByEmail(email)
-
     const findUserByCpf = await this.usersRepository.findByCpf(cpf)
 
-    if (findUserByEmail || findUserByCpf) throw new Error('User already exists')
+    if (findUserByCpf) throw new Error('This cpf has already been taken')
+    if (findUserByEmail) throw new Error('This email has already been taken')
 
     await this.usersRepository.create({ name, email, cpf })
   }

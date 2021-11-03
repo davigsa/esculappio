@@ -1,12 +1,7 @@
 import { getRepository } from 'typeorm'
 
 import { User } from '../entities/User'
-
-interface ICreateUserDTO {
-  name: string;
-  email: string;
-  cpf: string;
-}
+import { ICreateUserDTO } from './IUsersRepository'
 
 class UsersRespository {
   private connectUserRepository () {
