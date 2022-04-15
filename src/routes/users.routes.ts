@@ -42,10 +42,11 @@ usersRoutes.post('/', async (req: Request, res: Response) => {
 
 usersRoutes.put('/:id', authMiddleware, async (req: Request, res: Response) => {
   const id = req.params.id
+  const userId = req.userId
   const { name, surname, email, cpf, username, password, telephone, gender } = req.body
 
   try {
-    await usersRespository.updateById(id, { name, surname, email, cpf, username, password, telephone, gender })
+    await usersRespository.updateById(id, userId, { name, surname, email, cpf, username, password, telephone, gender })
     res.status(201).send()
   } catch (e: any) {
     res.status(e.statusCode).send(e.message)
@@ -54,9 +55,10 @@ usersRoutes.put('/:id', authMiddleware, async (req: Request, res: Response) => {
 
 usersRoutes.delete('/:id', authMiddleware, async (req: Request, res: Response) => {
   const id = req.params.id
+  const userId = req.userId
 
   try {
-    await usersRespository.deleteById(id)
+    await usersRespository.deleteById(id, userId)
 
     res.sendStatus(204)
   } catch (e: any) {

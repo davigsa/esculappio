@@ -46,8 +46,10 @@ class UsersRespository {
     return userByCpf
   }
 
-  async updateById (id: string, { name, email, cpf }: ICreateUserDTO): Promise<void> {
+  async updateById (id: string, userId: string, { name, email, cpf }: ICreateUserDTO): Promise<void> {
     const userById = await this.connectUserRepository().findOne(id)
+
+    if (id !== userId) throw new HttpException(401, 'Unauthorized')
 
     if (!userById) throw new HttpException(404, 'User not found')
 
@@ -60,8 +62,10 @@ class UsersRespository {
     await this.connectUserRepository().save(userById)
   }
 
-  async deleteById (id: string): Promise<void> {
+  async deleteById (id: string, userId: string): Promise<void> {
     const userById = await this.connectUserRepository().findOne(id)
+
+    if (id !== userId) throw new HttpException(401, 'Unauthorized')
 
     if (!userById) throw new HttpException(404, 'User not found')
 

@@ -24,7 +24,7 @@ class AuthRepository {
 
     if (!isValidPassword) throw new HttpException(401, 'Wrong password')
 
-    const token = jwt.sign({ id: user.id }, `${process.env.JWT_SECRET}`, { expiresIn: '1d' }) // Trocar aqui por algo secreto e colocar no DOTENV
+    const token = jwt.sign({ id: user.id }, `${process.env.JWT_SECRET}`, { expiresIn: '1d' })
 
     delete user.password
 
