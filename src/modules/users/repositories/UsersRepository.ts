@@ -1,5 +1,6 @@
 import { getRepository } from 'typeorm'
 
+import HttpException from '../../../common/http-exception'
 import { User } from '../entities/User'
 import { ICreateUserDTO } from './IUsersRepository'
 
@@ -8,16 +9,17 @@ class UsersRespository {
     return getRepository(User)
   }
 
-  async create ({ name, email, cpf }: ICreateUserDTO): Promise<void> {
-    const newUser = new User()
+  async create ({ name, surname, email, cpf, username, password, telephone, gender }: ICreateUserDTO): Promise<User> {
+    const userExists = await this.connectUserRepository().findOne({ where: { cpf } })
 
-    Object.assign(newUser, {
-      name,
-      email,
-      cpf
-    })
+    if (userExists) {
+      throw new HttpException(409, 'User already exists')
+    }
 
-    await this.connectUserRepository().save(newUser)
+    const user = this.connectUserRepository().create({ name, surname, email, cpf, username, password, telephone, gender })
+    await this.connectUserRepository().save(user)
+
+    return user
   }
 
   async findAll (): Promise<User[]> {
@@ -27,7 +29,7 @@ class UsersRespository {
   async findById (id: string): Promise<User> {
     const userById = await this.connectUserRepository().findOne(id)
 
-    if (!userById) throw new Error('User not found')
+    if (!userById) throw new HttpException(404, 'User not found')
 
     return userById
   }
@@ -47,7 +49,7 @@ class UsersRespository {
   async updateById (id: string, { name, email, cpf }: ICreateUserDTO): Promise<void> {
     const userById = await this.connectUserRepository().findOne(id)
 
-    if (!userById) throw new Error('Could not update this user')
+    if (!userById) throw new HttpException(404, 'User not found')
 
     Object.assign(userById, {
       name,
@@ -61,7 +63,7 @@ class UsersRespository {
   async deleteById (id: string): Promise<void> {
     const userById = await this.connectUserRepository().findOne(id)
 
-    if (!userById) throw new Error('User not found')
+    if (!userById) throw new HttpException(404, 'User not found')
 
     await this.connectUserRepository().remove(userById)
   }

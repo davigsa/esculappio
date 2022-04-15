@@ -1,25 +1,42 @@
-import { v4 as uuidv4 } from 'uuid'
-import { Column, CreateDateColumn, Entity, PrimaryColumn } from 'typeorm'
+import { Column, CreateDateColumn, Entity, PrimaryColumn, BeforeInsert, BeforeUpdate } from 'typeorm'
+import bcrypt from 'bcryptjs'
 
 @Entity('users')
 class User {
     @PrimaryColumn()
-    id?: string
+    id: string
 
     @Column()
-    name!: string
+    name: string
 
     @Column()
-    email!: string
+    surname: string
+
+    @Column({ unique: true })
+    username: string
 
     @Column()
-    cpf!: string
+    password: string
+
+    @Column({ unique: true })
+    email: string
+
+    @Column({ unique: true })
+    cpf: string
+
+    @Column()
+    telephone: string
+
+    @Column('text')
+    gender: string
 
     @CreateDateColumn({ name: 'created_at' })
-    createdAt!: Date
+    createdAt: Date
 
-    constructor () {
-      if (!this.id) this.id = uuidv4()
+    @BeforeInsert()
+    @BeforeUpdate()
+    hashPassword () {
+      this.password = bcrypt.hashSync(this.password, 8)
     }
 }
 

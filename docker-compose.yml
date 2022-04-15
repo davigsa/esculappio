@@ -12,7 +12,7 @@ services:
     volumes:
       - ./pgdata:/data/postgres
   api:
-    container_name: elephant-on-whale
+    container_name: esculappio
     build: .
     links:
       - db

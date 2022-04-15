@@ -1,13 +1,18 @@
 import { User } from '../entities/User'
 
 interface ICreateUserDTO {
-    name: string;
-    email: string;
-    cpf: string;
-  }
+  name: string;
+  surname: string;
+  email: string;
+  cpf: string;
+  username: string;
+  telephone: string;
+  password: string;
+  gender: string;
+}
 
 interface IUsersRepository {
-    create ({ name, email, cpf }: ICreateUserDTO): Promise<void>
+    create ({ name, surname, email, cpf, username, password, telephone, gender }: ICreateUserDTO): Promise<User>
 
     findById (id: string): Promise<User>
 
@@ -15,7 +20,7 @@ interface IUsersRepository {
 
     findByCpf (cpf: string): Promise<User | undefined>
 
-    updateById (id: string, { name, email, cpf }: ICreateUserDTO): Promise<void>
+    updateById (id: string, { name, surname, email, cpf, username, password, telephone, gender }: ICreateUserDTO): Promise<void>
 
     deleteById (id: string): Promise<void>
 }
