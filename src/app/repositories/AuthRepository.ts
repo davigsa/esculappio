@@ -4,11 +4,7 @@ import jwt from 'jsonwebtoken'
 
 import HttpException from '../../common/http-exception'
 import { User } from '../entities/User'
-
-interface ILoginUserDTO {
-  username: string;
-  password: string;
-}
+import { ILoginUserDTO } from '../interfaces/IAuth'
 
 class AuthRepository {
   private connectUserRepository () {

@@ -2,7 +2,7 @@ import { getRepository } from 'typeorm'
 
 import HttpException from '../../common/http-exception'
 import { User } from '../entities/User'
-import { ICreateUserDTO } from './IUsersRepository'
+import { ICreateUserDTO } from '../interfaces/IUsers'
 
 class UsersRespository {
   private connectUserRepository () {
