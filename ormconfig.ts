@@ -8,10 +8,10 @@ const ormConfig: ConnectionOptions = {
   password: process.env.DATABASE_PASSWORD,
   database: process.env.DATABASE_DEFAULT,
   migrations: ['./src/database/migrations/*.ts'],
-  entities: ['./src/modules/**/entities/*.ts'],
+  entities: ['./src/app/**/entities/*.ts'],
   cli: {
     migrationsDir: './src/database/migrations',
-    entitiesDir: './src/modules/**/entities'
+    entitiesDir: './src/app/**/entities'
   }
 }
 

@@ -2,7 +2,7 @@ import { getRepository } from 'typeorm'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 
-import HttpException from '../../../common/http-exception'
+import HttpException from '../../common/http-exception'
 import { User } from '../entities/User'
 
 interface ILoginUserDTO {

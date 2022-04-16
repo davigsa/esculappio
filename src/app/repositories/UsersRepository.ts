@@ -1,6 +1,6 @@
 import { getRepository } from 'typeorm'
 
-import HttpException from '../../../common/http-exception'
+import HttpException from '../../common/http-exception'
 import { User } from '../entities/User'
 import { ICreateUserDTO } from './IUsersRepository'
 
@@ -23,7 +23,11 @@ class UsersRespository {
   }
 
   async findAll (): Promise<User[]> {
-    return await this.connectUserRepository().find()
+    const users = await this.connectUserRepository().find()
+
+    if (!users) throw new HttpException(404, 'Users not found')
+
+    return users
   }
 
   async findById (id: string): Promise<User> {
@@ -37,6 +41,8 @@ class UsersRespository {
   async findByEmail (email: string): Promise<User | undefined> {
     const userByEmail = await this.connectUserRepository().findOne({ email: email })
 
+    if (!userByEmail) throw new HttpException(404, 'User not found')
+
     return userByEmail
   }
 
@@ -46,7 +52,7 @@ class UsersRespository {
     return userByCpf
   }
 
-  async updateById (id: string, userId: string, { name, email, cpf }: ICreateUserDTO): Promise<void> {
+  async updateById (id: string, userId: string, { name, surname, email, cpf, username, password, telephone, gender }: ICreateUserDTO): Promise<void> {
     const userById = await this.connectUserRepository().findOne(id)
 
     if (id !== userId) throw new HttpException(401, 'Unauthorized')
@@ -55,8 +61,13 @@ class UsersRespository {
 
     Object.assign(userById, {
       name,
+      surname,
       email,
-      cpf
+      cpf,
+      username,
+      password,
+      telephone,
+      gender
     })
 
     await this.connectUserRepository().save(userById)

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction, Router } from 'express'
 
-import { AuthRepository } from '../modules/users/repositories/AuthRepository'
+import { AuthRepository } from '../app/repositories/AuthRepository'
 
 export const authRoutes = Router()
 const authRepository = new AuthRepository()

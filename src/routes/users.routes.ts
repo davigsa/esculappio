@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction, Router } from 'express'
 
-import { UsersRespository } from '../modules/users/repositories/UsersRepository'
+import { UsersRespository } from '../app/repositories/UsersRepository'
 import authMiddleware from '../middleware/auth.middleware'
 
 export const usersRoutes = Router()
