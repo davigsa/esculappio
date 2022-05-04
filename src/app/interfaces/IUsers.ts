@@ -1,5 +1,14 @@
 import { User } from '../entities/User'
 
+interface IUsersDTO {
+  name: string;
+  surname: string;
+  email: string;
+  cpf: string;
+  username: string;
+  telephone: string;
+  gender: string;
+}
 interface ICreateUserDTO {
   name: string;
   surname: string;
@@ -25,4 +34,4 @@ interface IUsersRepository {
     deleteById (id: string): Promise<void>
 }
 
-export { IUsersRepository, ICreateUserDTO }
+export { IUsersRepository, ICreateUserDTO, IUsersDTO }

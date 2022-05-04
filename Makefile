@@ -15,3 +15,6 @@ migration-run:
 
 migration-revert:
 	yarn typeorm migration:revert
+
+migrate-generate:
+	yarn typeorm migrate:generate -n $(n)

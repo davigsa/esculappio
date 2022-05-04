@@ -1,12 +1,10 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm'
 
-export class CreateUsers1634144985942 implements MigrationInterface {
+export class CreatePatientsDiseasesVaccines1651070297746 implements MigrationInterface {
   public async up (queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"')
-
     await queryRunner.createTable(
       new Table({
-        name: 'users',
+        name: 'diseases',
         columns: [
           {
             name: 'id',
@@ -20,34 +18,11 @@ export class CreateUsers1634144985942 implements MigrationInterface {
             type: 'varchar'
           },
           {
-            name: 'surname',
+            name: 'treatment',
             type: 'varchar'
           },
           {
-            name: 'username',
-            type: 'varchar',
-            isUnique: true
-          },
-          {
-            name: 'email',
-            type: 'varchar',
-            isUnique: true
-          },
-          {
-            name: 'cpf',
-            type: 'varchar',
-            isUnique: true
-          },
-          {
-            name: 'password',
-            type: 'varchar'
-          },
-          {
-            name: 'telephone',
-            type: 'varchar'
-          },
-          {
-            name: 'gender',
+            name: 'symptoms',
             type: 'varchar'
           },
           {
@@ -61,7 +36,7 @@ export class CreateUsers1634144985942 implements MigrationInterface {
 
     await queryRunner.createTable(
       new Table({
-        name: 'doctors',
+        name: 'vaccines',
         columns: [
           {
             name: 'id',
@@ -71,16 +46,15 @@ export class CreateUsers1634144985942 implements MigrationInterface {
             default: 'uuid_generate_v4()'
           },
           {
-            name: 'crm',
-            type: 'varchar',
-            isUnique: true
-          },
-          {
-            name: 'specialization',
+            name: 'name',
             type: 'varchar'
           },
           {
-            name: 'user_id',
+            name: 'laboratory',
+            type: 'varchar'
+          },
+          {
+            name: 'disease_id',
             type: 'uuid'
           },
           {
@@ -91,10 +65,62 @@ export class CreateUsers1634144985942 implements MigrationInterface {
         ],
         foreignKeys: [
           {
-            name: 'providerDoctor',
+            name: 'providerVaccine',
+            referencedTableName: 'diseases',
+            referencedColumnNames: ['id'],
+            columnNames: ['disease_id'],
+            onDelete: 'CASCADE',
+            onUpdate: 'CASCADE'
+          }
+        ]
+      })
+    )
+
+    await queryRunner.createTable(
+      new Table({
+        name: 'patients',
+        columns: [
+          {
+            name: 'id',
+            type: 'uuid',
+            isPrimary: true,
+            generationStrategy: 'uuid',
+            default: 'uuid_generate_v4()'
+          },
+          {
+            name: 'observation',
+            type: 'varchar',
+            isNullable: true
+          },
+          {
+            name: 'user_id',
+            type: 'uuid'
+          },
+          {
+            name: 'diseases',
+            type: 'uuid',
+            isNullable: true
+          },
+          {
+            name: 'created_at',
+            type: 'timestamp',
+            default: 'now()'
+          }
+        ],
+        foreignKeys: [
+          {
+            name: 'providerPatient',
             referencedTableName: 'users',
             referencedColumnNames: ['id'],
             columnNames: ['user_id'],
+            onDelete: 'CASCADE',
+            onUpdate: 'CASCADE'
+          },
+          {
+            name: 'providerPatientDiseases',
+            referencedTableName: 'diseases',
+            referencedColumnNames: ['id'],
+            columnNames: ['diseases'],
             onDelete: 'CASCADE',
             onUpdate: 'CASCADE'
           }
@@ -104,8 +130,8 @@ export class CreateUsers1634144985942 implements MigrationInterface {
   }
 
   public async down (queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('doctors')
-    await queryRunner.dropTable('users')
-    await queryRunner.query('DROP EXTENSION "uudi-ossp"')
+    await queryRunner.dropTable('patients')
+    await queryRunner.dropTable('vaccines')
+    await queryRunner.dropTable('diseases')
   }
 }
