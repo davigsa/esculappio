@@ -42,17 +42,18 @@ class PatientsRepository {
   }
 
   async find (): Promise<Patient[]> {
-    const patients = await this.connectPatientRepository().find()
+    const patients = await this.connectPatientRepository().query('select * from users as u inner join patients as p on p.user_id = u.id')
 
     return patients
   }
 
-  async findOne (id : string): Promise<any> {
-    const patient = await this.connectPatientRepository().findOne({
-      where: { id }
-    })
+  async findOne (id : string): Promise<Patient> {
+    const patients = await this.connectPatientRepository().query('select * from users as u inner join patients as p on p.id = $1 and p.user_id = u.id limit 1', [id])
 
-    if (!patient) throw new HttpException(401, 'Patient not found')
+    if (patients.length === 0) throw new HttpException(404, 'Patient not found')
+
+    const patient = patients[0]
+    delete patient.password
 
     return patient
   }
